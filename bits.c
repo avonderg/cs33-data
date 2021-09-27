@@ -113,7 +113,15 @@ EXAMPLES OF ACCEPTABLE CODING STYLE:
  *   Max ops: 8
  *   Rating: 1
  */
-int bit_and(int x, int y) { return 2; }
+int bit_and(int x, int y) { 
+	/* flips every binary value in both inputs, uses bitwise OR to compare both flipped values,
+	and returns the flipped version of that result */
+	int z; // store result of bitwise OR here
+	int result; // store result here
+	z = (~x | ~y); // flips both x and y and compares both using bitwise OR
+	result = ~z; // flips that result
+	return result; 
+}
 
 
 /*
@@ -125,7 +133,15 @@ int bit_and(int x, int y) { return 2; }
  *   Max ops: 5
  *   Rating: 2
  */
-int negate(int x) { return 2; }
+int negate(int x) { 
+	/* given input x, flips the bits of x, and since the flipped version of x
+	is the negation (x+1), 1 is added to that negation  */
+	int y; // stores flipped value of x
+	int result; // stores result
+	y = ~x; // flips x
+	result = 1 + y; // adds one to flipped value, since flipped value is a negation of (x+1)
+	return result;
+}
 
 
 /*
@@ -136,7 +152,15 @@ int negate(int x) { return 2; }
  *   Max ops: 5
  *   Rating: 2
  */
-int is_equal(int x, int y) { return 2; }
+int is_equal(int x, int y) {
+	/* after applying bitwise XOR to both x and y, 0 is returned if both are the same,
+	and another value otherwise. applying the logical NOT returns 1 if XOR gives a value other than 1.
+	applying the logical NOT one more time to this result converts 0 to 1, and 1 to 0, so that the correct
+	value is returned.
+	*/
+	int z = !(x^y); // z is 1 if both are different, 0 otherwise
+	return !z; // returns 0 if z is 1, 1 if z is 0 
+ }
 
 
 /*
@@ -148,7 +172,18 @@ int is_equal(int x, int y) { return 2; }
  *   Max ops: 15
  *   Rating: 2
  */
-int div_pwr_2(int x, int n) { return 2; }
+int div_pwr_2(int x, int n) { 
+/* Uses a bit mask to check if the input is value (mask = -1 if negative, 0 otherwise), and, 
+using the mask, computes a power-of-two divide, adding (1 >>n) - 1 only if the input
+is negative by using logical AND with the mask and (1 >>n) - 1. Then, an arithmetic shift to the right
+by n gives the final result.*/
+int mask;
+int xory;
+int absv;
+mask = (x>>31); // gets the leftmost bits: 1111 if negative, 0000 if positive
+int mask_checked = (1 << n) + (~1 + 1); // computes rest of power-of-two formula 
+return (x + (mask_checked&mask) >> n); // mask_checked is only added if the mask is 1111
+}
 
 
 /*
@@ -170,7 +205,16 @@ int leastBitPos(int x) { return 2; }
  *   Max ops: 16
  *   Rating: 3
  */
-int conditional(int x, int y, int z) { return 2; }
+int conditional(int x, int y, int z) { 
+/* Using bit masks, returns z if the first arg is zero, and y otherwise. */
+int mask_start = !(x); // returns 1 if it x is zero, and 0 otherwise
+int add_holder = (~1 + 1); // value of (-1)
+int fixed_mask = mask_start + add_holder; // if mask_start is 1, then fixed = 0; if mask_start is 0, then fixed = -1
+int negated_mask = ~(fixed_mask); // negates fixed_mask so that only the correct variable is returned
+int result = fixed_mask&y; // if x is zero, result is zero, otherwise gives the value of y
+return result + (negated_mask&z); // if x is zero, then returns the value of z. otherwise, returns y
+}
+
 
 
 /*
@@ -193,7 +237,21 @@ int add_ok(int x, int y) { return 2; }
  *   Max ops: 6
  *   Rating: 5
  */
-int abs_val(int x) { return 2; }
+int abs_val(int x) { 
+	/* Using two's complement values of bits, a mask of the input is created by computing a 
+	right shift of 31 bits- which gives 1111 if x is negative, and 0000 if x is positive.
+	Then, the mask is added to the input, and this value is XOR'ed to the mask. So, if it is
+	positive, zero is added to the input, and XOR'ing this to the mask gives the input. If it is 
+	odd, adding the mask to the input decreases the input by 1, but XOR'ing this decreased val
+	to the mask gives the input, but positive. */
+	int mask;
+	int added;
+	int result;
+	mask = x >> 31; // extracts mask
+	added = mask + x; // adds mask to input
+	result = added^mask; // XORs this added value to the mask
+	return result;
+}
 
 
 /*
