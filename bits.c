@@ -153,12 +153,13 @@ int negate(int x) {
  *   Rating: 2
  */
 int is_equal(int x, int y) {
-	/* after applying bitwise XOR to both x and y, 0 is returned if both are the same,
+	/* After applying bitwise XOR to both x and y, 0 is returned if both are the same,
 	and another value otherwise. applying the logical NOT returns 1 if XOR gives a value other than 1.
 	applying the logical NOT one more time to this result converts 0 to 1, and 1 to 0, so that the correct
 	value is returned.
 	*/
-	int z = !(x^y); // z is 1 if both are different, 0 otherwise
+	int z;
+	z = !(x^y); // z is 1 if both are different, 0 otherwise
 	return !z; // returns 0 if z is 1, 1 if z is 0 
  }
 
@@ -178,10 +179,9 @@ using the mask, computes a power-of-two divide, adding (1 >>n) - 1 only if the i
 is negative by using logical AND with the mask and (1 >>n) - 1. Then, an arithmetic shift to the right
 by n gives the final result.*/
 int mask;
-int xory;
-int absv;
+int mask_checked;
 mask = (x>>31); // gets the leftmost bits: 1111 if negative, 0000 if positive
-int mask_checked = (1 << n) + (~1 + 1); // computes rest of power-of-two formula 
+mask_checked = (1 << n) + (~1 + 1); // computes rest of power-of-two formula 
 return (x + (mask_checked&mask) >> n); // mask_checked is only added if the mask is 1111
 }
 
@@ -194,7 +194,15 @@ return (x + (mask_checked&mask) >> n); // mask_checked is only added if the mask
  *   Max ops: 6
  *   Rating: 4
  */
-int leastBitPos(int x) { return 2; }
+int leastBitPos(int x) {
+/* Finds the position of the least significant bit by negating the input, and then 
+AND'ing it to the input-- setting only one bit (the least significant one) */
+int negative;
+int mask;
+negative = ~x + 1; // gets the negated value of x
+mask = negative&x; // returns the negated value of x AND'ed to x
+return mask;
+}
 
 
 /*
@@ -207,11 +215,16 @@ int leastBitPos(int x) { return 2; }
  */
 int conditional(int x, int y, int z) { 
 /* Using bit masks, returns z if the first arg is zero, and y otherwise. */
-int mask_start = !(x); // returns 1 if it x is zero, and 0 otherwise
-int add_holder = (~1 + 1); // value of (-1)
-int fixed_mask = mask_start + add_holder; // if mask_start is 1, then fixed = 0; if mask_start is 0, then fixed = -1
-int negated_mask = ~(fixed_mask); // negates fixed_mask so that only the correct variable is returned
-int result = fixed_mask&y; // if x is zero, result is zero, otherwise gives the value of y
+int mask_start;
+int add_holder;
+int fixed_mask;
+int negated_mask;
+int result;
+mask_start = !(x); // returns 1 if it x is zero, and 0 otherwise
+add_holder = (~1 + 1); // placeholder for addition- is value of (-1)
+fixed_mask = mask_start + add_holder; // if mask_start is 1, then fixed = 0; if mask_start is 0, then fixed = -1
+negated_mask = ~(fixed_mask); // negates fixed_mask so that only the correct variable is returned
+result = fixed_mask&y; // if x is zero, result is zero, otherwise gives the value of y
 return result + (negated_mask&z); // if x is zero, then returns the value of z. otherwise, returns y
 }
 
@@ -247,7 +260,7 @@ int abs_val(int x) {
 	int mask;
 	int added;
 	int result;
-	mask = x >> 31; // extracts mask
+	mask = x >> 31; // extracts mask (i.e., whether or not input is positive or negative)
 	added = mask + x; // adds mask to input
 	result = added^mask; // XORs this added value to the mask
 	return result;
