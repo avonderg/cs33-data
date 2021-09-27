@@ -159,8 +159,8 @@ int is_equal(int x, int y) {
 	value is returned.
 	*/
 	int z;
-	z = !(x^y); // z is 1 if both are different, 0 otherwise
-	return !z; // returns 0 if z is 1, 1 if z is 0 
+	z = (x^y); // XORs both x and y
+	return !z; // z is 1 if x^y is 0 (i.e., the same), and 0 otherwise
  }
 
 
