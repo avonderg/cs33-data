@@ -239,19 +239,22 @@ return result + (negated_mask&z); // if x is zero, then returns the value of z. 
  *   Rating: 3
  */
 int add_ok(int x, int y) { 
-/* describe here*/
-// x will fit in n bits if x < 2^(n-1).
-int added;
+/* When there is an overflow, the sign bit at the far left of a binary number flips. I.e., 
+when two inputs are added together, the result will be of a different polarity. So,
+if two positive values are added together, the result is negative, and vice versa. Here,
+the polarity of x, y, and their sum is checked, and then compared against each other to see
+if the sign was flipped.*/
 int mask1;
 int mask2;
+int added;
 int added_mask;
-int res;
-int other;
+int checked_1;
+int checked_2;
+int checked_3;
 int result;
-int return_it;
-added = x + y;
 mask1 = x >> 31; // checks sign of first input
 mask2 = y >> 31; // checks sign of second input
+added = x + y; // adds the inputs
 added_mask = added >> 31; // checks sign of both inputs added
 // if signs are the same
 // int sign_checker = ~(mask1 ^ mask2); // if signs same, all 1s. ow, all zeros
@@ -263,12 +266,11 @@ added_mask = added >> 31; // checks sign of both inputs added
 
 ///////
 
-res = (mask1 ^ mask2); // is zero if bits same, -1 if diff
-other = added_mask ^ mask2; // is zero if bits the same, -1 ow
-result = (~res&other); // zero if bits the same, 1 ow
-return_it = !result;
-return return_it;
-
+checked_1 = (mask1 ^ mask2); // is zero if bits are the same, -1 if bits different
+checked_2 = added_mask ^ mask2; // is zero if bits are the same, -1 otherwise
+checked_3 = (~checked_1&checked_2); // flips checked_1 and compares it to checked_2- is 0 if both signs zero, 1 o.w.
+result = !checked_3; // if both are zero, there was an overflow, so the bang operator must be applied
+return result;
 }
 
 
