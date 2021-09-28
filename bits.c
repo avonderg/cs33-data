@@ -238,7 +238,37 @@ return result + (negated_mask&z); // if x is zero, then returns the value of z. 
  *   Max ops: 20
  *   Rating: 3
  */
-int add_ok(int x, int y) { return 2; }
+int add_ok(int x, int y) { 
+/* describe here*/
+// x will fit in n bits if x < 2^(n-1).
+int added;
+int mask1;
+int mask2;
+int added_mask;
+added = x + y;
+mask1 = x >> 31; // checks sign of first input
+mask2 = y >> 31; // checks sign of second input
+added_mask = added >> 31; // checks sign of both inputs added
+// // if signs are the same
+// int sign_checker = ~(mask1 ^ mask2); // if signs same, all 1s. ow, all zeros
+// // we know there was overflow if signs of both checkers are the same, 
+// // but result has a diff sign (so pos+ pos = neg or neg+neg = pos)- no overflow if signs the same
+// int result_checker = (mask2 ^ added_mask); // checks mask of result: zeros if the same as input
+// int pre = sign_checker & result_checker; // zeros if the signs the same, otherwise one
+// int result = !pre; // value to return - flips prev result
+
+
+///////
+
+int res = (mask1 ^ mask2); // is zero if bits same, -1 if diff
+int other = added_mask ^ mask2; // is zero if bits the same, -1 ow
+int result = res^other; // zero if bits the same, 1 ow
+int returnit = !result;
+return returnit;
+
+
+
+}
 
 
 /*
@@ -274,4 +304,15 @@ int abs_val(int x) {
  *   Max ops: 12
  *   Rating: 5
  */
-int bang(int x) { return 2; }
+int bang(int x) {
+/* Negates the input, so that it can then use the bitwise OR operator to compare the negated input
+with the original input. Applying OR will always result in -1 if x is non-zero, and zero otherwise.
+Thus, from there, we can simply add one to this value to return the appropriate value. */
+int negated;
+int mask;
+int result;
+negated = ~x + 1; // negates x (if x is zero, it stays the same);
+mask = negated|x; // if x is zero, returns 0, o.w., returns -1
+result = mask + 1; // adds one to final value so that it returns appropriate value
+return result;
+}
