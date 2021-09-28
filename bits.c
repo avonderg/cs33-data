@@ -263,10 +263,9 @@ added_mask = added >> 31; // checks sign of both inputs added
 int res = (mask1 ^ mask2); // is zero if bits same, -1 if diff
 int other = added_mask ^ mask2; // is zero if bits the same, -1 ow
 int result = res^other; // zero if bits the same, 1 ow
-int returnit = !result;
+int returnit;
+returnit = !result;
 return returnit;
-
-
 
 }
 
