@@ -265,8 +265,8 @@ added_mask = added >> 31; // checks sign of both inputs added
 
 res = (mask1 ^ mask2) >> 31; // is zero if bits same, -1 if diff
 other = added_mask ^ mask2 >> 31; // is zero if bits the same, -1 ow
-result = (res^other) >> 31; // zero if bits the same, 1 ow
-return_it = !result;
+result = (res&other) >> 31; // zero if bits the same, 1 ow
+return_it = result;
 return return_it;
 
 }
