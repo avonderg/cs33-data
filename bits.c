@@ -245,27 +245,29 @@ int added;
 int mask1;
 int mask2;
 int added_mask;
+int res;
+int other;
+int result;
+int return_it;
 added = x + y;
 mask1 = x >> 31; // checks sign of first input
 mask2 = y >> 31; // checks sign of second input
 added_mask = added >> 31; // checks sign of both inputs added
-// // if signs are the same
+// if signs are the same
 // int sign_checker = ~(mask1 ^ mask2); // if signs same, all 1s. ow, all zeros
-// // we know there was overflow if signs of both checkers are the same, 
-// // but result has a diff sign (so pos+ pos = neg or neg+neg = pos)- no overflow if signs the same
+// we know there was overflow if signs of both checkers are the same, 
+// but result has a diff sign (so pos+ pos = neg or neg+neg = pos)- no overflow if signs the same
 // int result_checker = (mask2 ^ added_mask); // checks mask of result: zeros if the same as input
 // int pre = sign_checker & result_checker; // zeros if the signs the same, otherwise one
 // int result = !pre; // value to return - flips prev result
 
-
 ///////
 
-int res = (mask1 ^ mask2); // is zero if bits same, -1 if diff
-int other = added_mask ^ mask2; // is zero if bits the same, -1 ow
-int result = res^other; // zero if bits the same, 1 ow
-int returnit;
-returnit = !result;
-return returnit;
+res = (mask1 ^ mask2); // is zero if bits same, -1 if diff
+other = added_mask ^ mask2; // is zero if bits the same, -1 ow
+result = res^other; // zero if bits the same, 1 ow
+return_it = !result;
+return return_it;
 
 }
 
