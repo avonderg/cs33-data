@@ -313,7 +313,7 @@ int negated;
 int mask;
 int result;
 negated = ~x + 1; // negates x (if x is zero, it stays the same);
-mask = negated|x; // if x is zero, returns 0, o.w., returns -1
+mask = (negated|x) >> 31; // if x is zero, returns 0, o.w., returns -1
 result = mask + 1; // adds one to final value so that it returns appropriate value
 return result;
 }
