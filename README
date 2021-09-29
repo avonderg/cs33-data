@@ -3,13 +3,15 @@ Data Project
 ***********************
 README
 _______________________
- 1. _What is the smallest positive non-zero value that can be represented as a normalized double-precision number? How much larger is the next smallest value?_
+ 1. What is the smallest positive non-zero value that can be represented as a normalized double-precision number? How much larger is the next smallest value?
+ 
 With normalized, double-precision values, we have to use the formula for finding a floating point, that being (-1)^{s} * M * 2 ^{E}. As stated in the question, the value must be positive- so, s=0 would satisfy this within the equation. Next, in order to get the smallest possible value, we know that the significant is at its minimum when frac=000…0 (M =  1.0). So, we set M = 1. Lastly, to find the value of E, we must subtract the bias (2^{k-1} -1) from the exponent, where k is the number of exponent bits (which, in this case of double-precision, would be 11 bits). This hence gives 2^{10} - 1 = 1023. Although we do want the smallest value, since it must be non-zero, the exponent cannot be zero- it must the the next smallest value, which is 1. So, plugging all these values in, we get:  2 ^{1 - 1023} = 2^{-1022}. 
 
 To find the next smallest value, the frac bit would no longer be 000…0, it would instead have a 1 as its rightmost bit. Here, M would instead be 2^{52} + 1 / 2^{52}. All the other values of the formula (s and E), however, would not change. Thus, the next smallest normalized value would be: (2^{52} + 1 / 2^{52}) * (2^{-1022}) = 2^{-1022} + 2^{-1022-52} = 2^{-1022} + 2^{-1074}. Therefore, the next smallest value is greater than the smallest value by 2^{-1074}. 
 
 
 2. What is the smallest positive non-zero value that can be represented as a denormalized double-precision number? How much greater than this is the next smallest value?
+
 The previously used formula for finding a floating point, that being (-1)^{s} * M * 2 ^{E}, can also be used for denormalized values. For denormalized values, the formula for E is now E = -Bias + 1, and, additionally, the value of the exponent can also be set to zero. The formula for the actual bias stays the same, and since we are working with double-precision, k is, again, 11 bits. So: 2^{10} - 1= 1023 is our bias, and plugging this into E, we get: E = - 1023 + 1 = -1022. To maintain the value as positive, we set s = 0. With denormalized values, a frac of 000…0 represents a zero value, so we must increase it by one to get the smallest value- that being, 000…1. With this frac (again, of 52-bits since it is double-precision), to find M, we plug this in and get: 1/2^{52}. Thus, if we plug these values in, this gives: (1/2^{52})*(2^{-1022}). 
 
 To find the next smallest value, we must increase the frac by 1, as done in the previous question, so that it would then be 000.10, which would change the value of M so that it instead would be 2/2^{52}. Plugging this value back into the question (keeping in mind that all other variables do not change), we get: (2/2^{52})*(2^{-1022}). Therefore, the next smallest value is greater than the smallest value by 1/2^{52}. 
